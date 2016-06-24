@@ -35,7 +35,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Morpher.API, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Morpher.API.1.0.8\lib\Morpher.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Morpher.AppConfigFactory, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Morpher.API.1.0.8\lib\Morpher.AppConfigFactory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Morpher.Dynamic, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Morpher.API.1.0.8\lib\Morpher.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Morpher.Generic, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Morpher.API.1.0.8\lib\Morpher.Generic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Morpher.WebService.V2, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Morpher.API.1.0.8\lib\Morpher.WebService.V2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -52,6 +74,7 @@
   <ItemGroup>
     <Compile Include="DeclensionServiceTests.cs" />
     <Compile Include="FunctionalTests.cs" />
+    <Compile Include="MorpherService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +86,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\RussianBoyNames.txt" />
     <EmbeddedResource Include="Resources\RussianGirlNames.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
