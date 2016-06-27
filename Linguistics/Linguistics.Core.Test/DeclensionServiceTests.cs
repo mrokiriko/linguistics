@@ -747,6 +747,66 @@ namespace Linguistics.Core.Test
         }
 
         [TestMethod]
+        public void Name1_Martin()
+        {
+            //Arrange
+            var name = "Мартин";
+            IDeclensionService service = new DeclensionService();
+
+            //Act
+            var nameCases = service.DeclineFirstName(name);
+
+            //Assert
+            Assert.AreEqual(6, nameCases.Keys.Count);
+            Assert.AreEqual(name, nameCases[Case.Nominative]);
+            Assert.AreEqual("Мартина", nameCases[Case.Genitive]);
+            Assert.AreEqual("Мартину", nameCases[Case.Dative]);
+            Assert.AreEqual("Мартина", nameCases[Case.Accusative]);
+            Assert.AreEqual("Мартина", nameCases[Case.Instrumental]);
+            Assert.AreEqual("Мартине", nameCases[Case.Prepositional]);
+        }
+
+        [TestMethod]
+        public void Name2_Kirill()
+        {
+            //Arrange
+            var name = "Кирилл";
+            IDeclensionService service = new DeclensionService();
+
+            //Act
+            var nameCases = service.DeclineFirstName(name);
+
+            //Assert
+            Assert.AreEqual(6, nameCases.Keys.Count);
+            Assert.AreEqual(name, nameCases[Case.Nominative]);
+            Assert.AreEqual("Кирилла", nameCases[Case.Genitive]);
+            Assert.AreEqual("Кириллу", nameCases[Case.Dative]);
+            Assert.AreEqual("Кирилла", nameCases[Case.Accusative]);
+            Assert.AreEqual("Кириллом", nameCases[Case.Instrumental]);
+            Assert.AreEqual("Кирилле", nameCases[Case.Prepositional]);
+        }
+
+        [TestMethod]
+        public void Name3_Zarina()
+        {
+            //Arrange
+            var name = "Зарина";
+            IDeclensionService service = new DeclensionService();
+
+            //Act
+            var nameCases = service.DeclineFirstName(name);
+
+            //Assert
+            Assert.AreEqual(6, nameCases.Keys.Count);
+            Assert.AreEqual(name, nameCases[Case.Nominative]);
+            Assert.AreEqual("Зарины", nameCases[Case.Genitive]);
+            Assert.AreEqual("Зарине", nameCases[Case.Dative]);
+            Assert.AreEqual("Зарину", nameCases[Case.Accusative]);
+            Assert.AreEqual("Зариной", nameCases[Case.Instrumental]);
+            Assert.AreEqual("Зарине", nameCases[Case.Prepositional]);
+        }
+
+        [TestMethod]
         public void Makeit()
         {
             string name = "иван";

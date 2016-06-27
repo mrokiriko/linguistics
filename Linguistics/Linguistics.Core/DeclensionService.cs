@@ -278,6 +278,83 @@ namespace Linguistics.Core
                     {Case.Instrumental, "Альфией"},
                     {Case.Prepositional, "Альфие"}
                 }
+            },
+            {
+                "Гая",
+                new Dictionary<Case, string>
+                {
+                    {Case.Genitive, "Гая"},
+                    {Case.Dative, "Гая"},
+                    {Case.Accusative, "Гая"},
+                    {Case.Instrumental, "Гая"},
+                    {Case.Prepositional, "Гая"}
+                }
+            },
+            {
+                "Антонио",
+                new Dictionary<Case, string>
+                {
+                    {Case.Genitive, "Антонио"},
+                    {Case.Dative, "Антонио"},
+                    {Case.Accusative, "Антонио"},
+                    {Case.Instrumental, "Антонио"},
+                    {Case.Prepositional, "Антонио"}
+                }
+            },
+            {
+                "Микеле",
+                new Dictionary<Case, string>
+                {
+                    {Case.Genitive, "Микеле"},
+                    {Case.Dative, "Микеле"},
+                    {Case.Accusative, "Микеле"},
+                    {Case.Instrumental, "Микеле"},
+                    {Case.Prepositional, "Микеле"}
+                }
+            },
+            {
+                "Роджеро",
+                new Dictionary<Case, string>
+                {
+                    {Case.Genitive, "Роджеро"},
+                    {Case.Dative, "Роджеро"},
+                    {Case.Accusative, "Роджеро"},
+                    {Case.Instrumental, "Роджеро"},
+                    {Case.Prepositional, "Роджеро"}
+                }
+            },
+            {
+                "Анеле",
+                new Dictionary<Case, string>
+                {
+                    {Case.Genitive, "Анеле"},
+                    {Case.Dative, "Анеле"},
+                    {Case.Accusative, "Анеле"},
+                    {Case.Instrumental, "Анеле"},
+                    {Case.Prepositional, "Анеле"}
+                }
+            },
+            {
+                "Фире",
+                new Dictionary<Case, string>
+                {
+                    {Case.Genitive, "Фире"},
+                    {Case.Dative, "Фире"},
+                    {Case.Accusative, "Фире"},
+                    {Case.Instrumental, "Фире"},
+                    {Case.Prepositional, "Фире"}
+                }
+            },
+            {
+                "Маро",
+                new Dictionary<Case, string>
+                {
+                    {Case.Genitive, "Маро"},
+                    {Case.Dative, "Маро"},
+                    {Case.Accusative, "Маро"},
+                    {Case.Instrumental, "Маро"},
+                    {Case.Prepositional, "Маро"}
+                }
             }
         };
 
