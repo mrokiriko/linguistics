@@ -843,7 +843,7 @@ namespace Linguistics.Core.Test
             string name = "Илья";
 
             IDeclensionService service = new DeclensionService();
-            IPattern pattern = new Pattern();
+            INamePatternService pattern = new NamePatternService();
             var str1 = pattern.GetPattern(name);
 
             var result = service.DeclineFirstName(name);

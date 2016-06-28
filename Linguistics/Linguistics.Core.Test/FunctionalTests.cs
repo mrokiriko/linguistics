@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Linguistics.Core.Test
@@ -10,27 +8,6 @@ namespace Linguistics.Core.Test
 	[TestClass]
 	public sealed class FunctionalTests
 	{
-		public static Stream GetResourceStream(string resourceName)
-		{
-			var resourceFullFileName = string.Format("{0}.{1}", typeof(FunctionalTests).Namespace, resourceName);
-			return Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceFullFileName);
-		}
-
-		public static IEnumerable<string> GetResourceLines(string resourceName)
-		{
-			using (var stream = GetResourceStream(resourceName))
-			{
-				using (var reader = new StreamReader(stream))
-				{
-					while (!reader.EndOfStream)
-					{
-						yield return reader.ReadLine();
-					}
-				}
-			}
-//			var names = new HashSet<string> {"", "", "", ""};
-		}
-
 		[TestMethod]
 		public void CheckAllBoyNamesTest()
 		{
@@ -88,7 +65,7 @@ namespace Linguistics.Core.Test
 			var errorNames = new Collection<string>();
 			var errorNameCases = new Dictionary<string, IDictionary<Case, string>>();
 
-			foreach (var name in GetResourceLines(resourceName))
+			foreach (var name in TestUtils.GetResourceLines(resourceName))
 			{
 				try
 				{
