@@ -14,4 +14,9 @@ namespace Linguistics.Core
         /// <returns>Cases of source first name</returns>
         IDictionary<Case, string> DeclineFirstName(string firstName);
     }
+
+    public interface IPattern
+    {
+        string GetPattern(string name);
+    }
 }

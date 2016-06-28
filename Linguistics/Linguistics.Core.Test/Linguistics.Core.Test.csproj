@@ -76,6 +76,7 @@
     <Compile Include="FunctionalTests.cs" />
     <Compile Include="MorpherService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PatternTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Linguistics.Core\Linguistics.Core.csproj">
@@ -91,6 +92,9 @@
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\NamePattern.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

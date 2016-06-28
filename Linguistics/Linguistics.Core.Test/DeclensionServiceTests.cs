@@ -807,6 +807,26 @@ namespace Linguistics.Core.Test
         }
 
         [TestMethod]
+        public void Name4_Luka()
+        {
+            //Arrange
+            var name = "Лука";
+            IDeclensionService service = new DeclensionService();
+
+            //Act
+            var nameCases = service.DeclineFirstName(name);
+
+            //Assert
+            Assert.AreEqual(6, nameCases.Keys.Count);
+            Assert.AreEqual(name, nameCases[Case.Nominative]);
+            Assert.AreEqual("Луки", nameCases[Case.Genitive]);
+            Assert.AreEqual("Луке", nameCases[Case.Dative]);
+            Assert.AreEqual("Луку", nameCases[Case.Accusative]);
+            Assert.AreEqual("Лукой", nameCases[Case.Instrumental]);
+            Assert.AreEqual("Луке", nameCases[Case.Prepositional]);
+        }
+
+        [TestMethod]
         public void Makeit()
         {
             string name = "иван";
@@ -815,6 +835,30 @@ namespace Linguistics.Core.Test
             var result = service.DeclineFirstName(name);
 
             Console.WriteLine("Дательный: {0}", result[Case.Dative]);
+        }
+
+        [TestMethod]
+        public void MakePattern()
+        {
+            string name = "Илья";
+
+            IDeclensionService service = new DeclensionService();
+            IPattern pattern = new Pattern();
+            var str1 = pattern.GetPattern(name);
+
+            var result = service.DeclineFirstName(name);
+
+
+            Console.WriteLine("Я {0}.", result[Case.Nominative]);
+            Console.WriteLine("Нет {0}.", result[Case.Genitive]);
+            Console.WriteLine("Дать {0}.", result[Case.Dative]);
+            Console.WriteLine("Вижу {0}.", result[Case.Accusative]);
+            Console.WriteLine("Творить {0}.", result[Case.Instrumental]);
+            Console.WriteLine("Думать о {0}.", result[Case.Prepositional]);
+
+            Console.WriteLine();
+
+            Console.WriteLine("Паттерн: {0}", str1);
         }
     }
 }

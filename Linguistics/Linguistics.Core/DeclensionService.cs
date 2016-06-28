@@ -109,6 +109,17 @@ namespace Linguistics.Core
                 }
             },
             {
+                "н",
+                new Dictionary<Case, string>
+                {
+                    {Case.Genitive, "а"},
+                    {Case.Dative, "у"},
+                    {Case.Accusative, "а"},
+                    {Case.Instrumental, "ом"},
+                    {Case.Prepositional, "е"}
+                }
+            },
+            {
                 // consonants without Й
                 "0",
                 new Dictionary<Case, string>
@@ -389,7 +400,7 @@ namespace Linguistics.Core
                 }
             }
 
-            // cut last character
+            // catch supported endings, cut last character
             foreach (var supportedEnding in EndingTable.Keys)
             {
                 if (firstName.EndsWith(supportedEnding))
@@ -405,6 +416,7 @@ namespace Linguistics.Core
                 }
             }
 
+            // catch everything else, don't cut last character
             if (letters.Any(x => firstName.EndsWith(x)))
             {
                 var endings = EndingTable["0"];
@@ -416,7 +428,45 @@ namespace Linguistics.Core
                 return result;
             }
 
+            var endings1 = EndingTable["0"];
+            var firstNameStam1 = firstName.Substring(0, firstName.Length - 1);
+
+            foreach (var caseValue in endings1.Keys)
+            {
+                result.Add(caseValue, firstNameStam1 + endings1[caseValue]);
+            }
+            return result;
+
             throw new NotSupportedException(string.Format("End of '{0}' in not supported", firstName));
+        }
+    }
+
+    public sealed class Pattern : IPattern
+    {
+        public string GetPattern(string name)
+        {
+            IDeclensionService service = new DeclensionService();
+            var result = service.DeclineFirstName(name);
+
+            var equal = false;
+
+            var str1 = result[Case.Nominative];
+            var str2 = result[Case.Genitive].Substring(0, str1.Length);
+
+            while (equal == false)
+            {
+                if (str1 == str2)
+                {
+                    equal = true;
+                }
+                else
+                {
+                    str1 = str1.Substring(0, str1.Length - 1);
+                    str2 = str2.Substring(0, str2.Length - 1);
+                }
+            }
+
+            return str1 + '*';
         }
     }
 }

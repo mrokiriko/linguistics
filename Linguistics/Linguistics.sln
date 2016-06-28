@@ -6,10 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linguistics.Core", "Linguistics.Core\Linguistics.Core.csproj", "{8BD510B8-632E-4809-8B3B-7908F7644FDD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2A95B18D-16A4-452E-8758-71DBF7F5E8EC}"
-	ProjectSection(SolutionItems) = preProject
-		RussianBoyNames.txt = RussianBoyNames.txt
-		RussianGirlNames.txt = RussianGirlNames.txt
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linguistics.Core.Test", "Linguistics.Core.Test\Linguistics.Core.Test.csproj", "{B07C4219-D027-451C-8136-921262DB1CC3}"
 EndProject
