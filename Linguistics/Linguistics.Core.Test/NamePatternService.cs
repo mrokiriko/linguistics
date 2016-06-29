@@ -35,5 +35,23 @@ namespace Linguistics.Core
 
             return nameCases[Case.Nominative].Substring(0, countLetters) + "*";
         }
+
+        public bool IsNameMatched(string pattern, string nameCaseValue)
+        {
+            var word = pattern.Substring(0, pattern.Length - 1);
+            //Console.WriteLine(word);
+            if (nameCaseValue.Contains(word))
+            {
+                Console.WriteLine("Found it, it's {0}", word);
+                return true;
+            }
+            else
+            {
+                return false;
+                //Console.WriteLine("Couldn't find it");
+            }
+
+            throw new NotImplementedException();
+        }
     }
 }

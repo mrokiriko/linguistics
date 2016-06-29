@@ -109,24 +109,6 @@ namespace Linguistics.Core.Test
             PatternNames(TestUtils.GetResourceLines(resourceName));
         }
 
-        public static bool IsNameMatched(string pattern, string nameCaseValue)
-        {
-            var word = pattern.Substring(0, pattern.Length - 1);
-            //Console.WriteLine(word);
-            if (nameCaseValue.Contains(word))
-            {
-                Console.WriteLine("Found it, it's {0}", word);
-                return true;
-            }
-            else
-            {
-                return false;
-                //Console.WriteLine("Couldn't find it");
-            }
-
-            throw new NotImplementedException();
-        }
-
         [TestMethod]
         public void NamePatternFunctionalTest_AllNames()
         {
@@ -153,36 +135,51 @@ namespace Linguistics.Core.Test
             // Assert
             foreach (var nameCaseValue in declensionService.DeclineFirstName(name).Values)
             {
-                Assert.IsTrue(IsNameMatched(pattern, nameCaseValue));
+                Assert.IsTrue(namePatternService.IsNameMatched(pattern, nameCaseValue));
             }
         }
 
-        [TestMethod]
-        public void FindName()
+        public bool FindName(string firstName, string line)
         {
-            var line =
-                "Оробей Еремей - обидит и воробей. Наговорил Егор с гору, да все не в пору. На всякого Егорку есть поговорка. Каждый Еремей про себя разумей. Ефрем любит хрен, а Федька - редьку.";
+            // Arrange
+            var namePatternService = new NamePatternService();
+            var declensionService = new DeclensionService();
 
-            var check = 0;
-            var err = 0;
-            var resourceLink = "Resources.NamePattern.txt";
-            foreach (var name in TestUtils.GetResourceLines(resourceLink))
-            {
-                var word = name.Substring(0, name.Length - 1);
-                //Console.WriteLine(word);
-                if (line.Contains(word))
-                {
-                    Console.WriteLine("Found it, it's {0}", word);
-                    check++;
-                }
-                else
-                {
-                    err++;
-                    //Console.WriteLine("Couldn't find it");
-                }
-            }
-            Console.WriteLine("{0}: Mistakes", err);
-            Assert.AreNotEqual(0, check);
+            // Act n' Assert
+            return namePatternService.IsNameMatched(namePatternService.GetPattern(firstName), line);
+        }
+
+        [TestMethod]
+        public void NameInLine1_Ivan()
+        {
+            var firstName = "Иван";
+            var line = "NetИвана99";
+            Assert.AreEqual(true, FindName(firstName, line));
+        }
+
+        [TestMethod]
+        public void NameInLine2_Avram()
+        {
+            var firstName = "Аврам";
+            var line = "И на весь мир стали известные Аврамовы дети";
+            Assert.AreEqual(true, FindName(firstName, line));
+        }
+
+        [TestMethod]
+        public void NameInLine3_Andrey()
+        {
+            var firstName = "Андрей";
+            var line = "566ААндрея1020";
+            Assert.AreEqual(true, FindName(firstName, line));
+        }
+
+        [TestMethod]
+        public void NameInLine4_Dmitriy()
+        {
+            var firstName = "Дмитрий";
+            var line =
+                "Слушай меня, слушай внимательно: и дворник, и Кох, и Пестряков, и другой дворник, и жена первого дворника, и мещанка, что о ту пору у ней в дворницкой сидела, и надворный советник Крюков, который в эту самую минуту с извозчика встал и в подворотню входил об руку с дамою, -- все, то есть восемь или десять свидетелей, единогласно показывают, что Николай придавил Дмитрия к земле, лежал на нем и его тузил, а тот ему в волосы вцепился и тоже тузил. Лежат они поперек дороги и проход загораживают; их ругают со всех сторон, а они, как малые ребята (буквальное выражение свидетелей), лежат друг на друге, визжат, дерутся и хохочут, оба хохочут взапуски, с самыми смешными рожами, и один другого догонять, точно дети, на улицу выбежали. Слышал? Теперь строго заметь себе: тела наверху еще теплые, слышишь, теплые, так нашли их! Если убили они, или только один Николай, и при этом ограбили сундуки со взломом, или только участвовали чем-нибудь в грабеже, то позволь тебе задать всего только один вопрос: сходится ли подобное душевное настроение, то есть взвизги, хохот, ребяческая драка под воротами, -- с топорами, с кровью, с злодейскою хитростью, осторожностью, грабежом? Тотчас же убили, всего каких-нибудь пять или десять минут назад, -- потому так выходит, тела еще теплые, -- и вдруг, бросив и тела, и квартиру отпертую, и зная, что сейчас туда люди прошли, и добычу бросив, они, как малые ребята, валяются на дороге, хохочут, всеобщее внимание на себя привлекают, и этому десять единогласных свидетелей есть!";
+            Assert.AreEqual(true, FindName(firstName, line));
         }
     }
 }

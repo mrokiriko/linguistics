@@ -45,8 +45,6 @@
     <Compile Include="Case.cs" />
     <Compile Include="DeclensionService.cs" />
     <Compile Include="IDeclensionService.cs" />
-    <Compile Include="INamePatternService.cs" />
-    <Compile Include="NamePatternService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
