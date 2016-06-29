@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Linguistics.Core.Test
@@ -150,7 +151,7 @@ namespace Linguistics.Core.Test
 
 
             // Act n' Assert
-            if (line.StartsWith(firstName))
+            if (line.StartsWith(firstName, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -165,7 +166,7 @@ namespace Linguistics.Core.Test
         void NameInLineYES_Ivan()
         {
             var firstName = "Иван";
-            var line = "Иванов";
+            var line = "ИваНов";
             Assert.IsTrue
                 (
                     FindName(firstName, line));
@@ -242,6 +243,48 @@ namespace Linguistics.Core.Test
             var firstName = "Николай";
             var line = "*(?!?Николай(!*?";
             Assert.IsFalse(FindName(firstName, line));
+        }
+
+        [TestMethod]
+        public void MakeDictionary()
+        {
+            // Arrange
+            const string resourceName = "Resources.NameValue.dic";
+            var names = TestUtils.GetResourceLines(resourceName);
+            var namePatternService = new NamePatternService();
+            var count = 0;
+
+            // Act, Assert
+            foreach (var name in names)
+            {
+                if (!name.StartsWith("#"))
+                {
+                    count++;
+                    Console.WriteLine(namePatternService.GetPattern(name));
+                }
+            }
+            Assert.AreEqual(0, count);
+        }
+
+        [TestMethod]
+        public void SortDicionary()
+        {
+            // Arrange
+            const string resourceName = "Resources.PatternDictionary.txt";
+            var names = TestUtils.GetResourceLines(resourceName);
+            var namePatternService = new NamePatternService();
+            var count = 0;
+
+            // Act, Assert
+
+            names = names.OrderBy(x => x);
+
+            foreach (var name in names)
+            {
+                Console.WriteLine(name);
+                count++;
+            }
+            //Assert.AreEqual(0, count);
         }
     }
 }
