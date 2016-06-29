@@ -148,13 +148,9 @@ namespace Linguistics.Core.Test
             firstName = namePatternService.GetPattern(firstName);
             firstName = firstName.Substring(0, firstName.Length - 1);
 
-            Console.WriteLine("firstName: {0}", firstName);
-            Console.WriteLine("line.IndexOf(firstName): {0}",
-                line.IndexOf(firstName));
 
             // Act n' Assert
-            if (line.IndexOf(firstName) == 0 ||
-                line[line.IndexOf(firstName) - 1] == ' ')
+            if (line.StartsWith(firstName))
             {
                 return true;
             }
@@ -169,7 +165,7 @@ namespace Linguistics.Core.Test
         void NameInLineYES_Ivan()
         {
             var firstName = "Иван";
-            var line = "Двух Иванов";
+            var line = "Иванов";
             Assert.IsTrue
                 (
                     FindName(firstName, line));
@@ -191,7 +187,7 @@ namespace Linguistics.Core.Test
         void NameInLineYES_Avram()
         {
             var firstName = "Аврам";
-            var line = "И на весь мир стали известные Аврамовы дети";
+            var line = "Аврамовы";
             Assert.IsTrue
                 (
                     FindName(firstName, line));
@@ -235,7 +231,7 @@ namespace Linguistics.Core.Test
         void NameInLineYES_Nikolay()
         {
             var firstName = "Николай";
-            var line = "Николая брата";
+            var line = "Николая";
             Assert.IsTrue(FindName(firstName, line));
         }
 
