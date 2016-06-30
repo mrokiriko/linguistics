@@ -762,7 +762,7 @@ namespace Linguistics.Core.Test
             Assert.AreEqual("Мартина", nameCases[Case.Genitive]);
             Assert.AreEqual("Мартину", nameCases[Case.Dative]);
             Assert.AreEqual("Мартина", nameCases[Case.Accusative]);
-            Assert.AreEqual("Мартина", nameCases[Case.Instrumental]);
+            Assert.AreEqual("Мартином", nameCases[Case.Instrumental]);
             Assert.AreEqual("Мартине", nameCases[Case.Prepositional]);
         }
 

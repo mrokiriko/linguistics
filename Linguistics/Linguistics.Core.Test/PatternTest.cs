@@ -286,5 +286,40 @@ namespace Linguistics.Core.Test
             }
             //Assert.AreEqual(0, count);
         }
+
+        [TestMethod]
+        public void CheckSubstring()
+        {
+            // Arrange
+            const string resourceName = "Resources.PatternDictionary.txt";
+            var names = TestUtils.GetResourceLines(resourceName);
+            string subname = ")(";
+            var changeName = 0;
+
+            // Act
+            foreach (var name in names)
+            {
+                var shortName = name.Substring(0, name.Length - 1);
+
+                if (shortName.IndexOf(subname, StringComparison.OrdinalIgnoreCase) >= 0 &&
+                    !shortName.Equals(subname, StringComparison.OrdinalIgnoreCase))
+                {
+                    var result = shortName.IndexOf(subname, StringComparison.OrdinalIgnoreCase);
+                    Console.WriteLine("found  {0}  in  {1}({2}){3}",
+                        subname,
+                        shortName.Substring(0, result),
+                        shortName.Substring(result, subname.Length),
+                        shortName.Substring(subname.Length + result, shortName.Length - result - subname.Length));
+                }
+                else if (shortName.Length > 3)
+                {
+                    subname = shortName;
+                    changeName++;
+                }
+            }
+
+            // Assert
+            Assert.AreEqual(0, changeName);
+        }
     }
 }

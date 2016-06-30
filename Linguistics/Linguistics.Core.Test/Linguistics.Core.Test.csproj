@@ -104,6 +104,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\PatternDictionary.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\1checkSubsting.txt" />
+    <Content Include="Resources\2checkSubsting.txt" />
+    <Content Include="Resources\3checkSubsting.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
