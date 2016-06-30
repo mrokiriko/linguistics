@@ -93,21 +93,6 @@
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resources\NameValue.dic" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\NamePattern.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\strings.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\PatternDictionary.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\1checkSubsting.txt" />
-    <Content Include="Resources\2checkSubsting.txt" />
-    <Content Include="Resources\3checkSubsting.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
