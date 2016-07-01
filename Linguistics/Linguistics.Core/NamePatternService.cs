@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 
 namespace Linguistics.Core
 {
@@ -9,42 +11,75 @@ namespace Linguistics.Core
             IDeclensionService service = new DeclensionService();
             var nameCases = service.DeclineFirstName(name);
 
-            var countLetters = 0;
-            var endofline = false;
+            var i = 0;
+            StringBuilder builder = new StringBuilder();
 
-            while (endofline == false && countLetters < nameCases[Case.Nominative].Length)
+            var casesWithoutNominative = nameCases.Where(p => p.Key != Case.Nominative).Select(p => p.Value).ToList();
+            var minNameCaseValueLength = nameCases.Values.Min(p => p.Length);
+
+            foreach (var letter in nameCases[Case.Nominative].Substring(0, minNameCaseValueLength))
             {
-                var letter = nameCases[Case.Nominative][countLetters];
-                foreach (var key in nameCases.Values)
+                bool allLettersAreEqual = true;
+
+                foreach (var nameCaseValue in casesWithoutNominative)
                 {
-                    if (letter != key[countLetters])
+                    if (letter != nameCaseValue[i])
                     {
-                        endofline = true;
-                        return nameCases[Case.Nominative].Substring(0, countLetters) + "*";
+                        allLettersAreEqual = false;
+                        break;
                     }
                 }
-                countLetters++;
+
+                if (!allLettersAreEqual)
+                {
+                    break;
+                }
+
+                builder.Append(letter);
+                i++;
             }
 
-            return nameCases[Case.Nominative].Substring(0, countLetters) + "*";
+            if (builder.Length < 4)
+            {
+                throw new TooShortPatternException();
+            }
+
+            builder.Append("*");
+            return builder.ToString();
         }
 
+        /// <summary>
+        /// Check whether name pattern matches name; name may be cased.
+        /// </summary>
+        /// <param name="pattern">Name pattern. It should end with asterik.</param>
+        /// <param name="nameCaseValue">Name value. Name may be cased.</param>
+        /// <returns>true if name is matched by pattern, otherwise false.</returns>
+        /// <exception cref="System.ArgumentNullException">Occurs if pattern or nameCaseValue is null</exception>
+        /// <exception cref="System.ArgumentException">Occurs if pattern is empty or does not end with asterik.</exception>
         public bool IsNameMatched(string pattern, string nameCaseValue)
         {
-            var word = pattern.Substring(0, pattern.Length - 1);
-            //Console.WriteLine(word);
-            if (nameCaseValue.Contains(word))
+            if (pattern == null)
             {
-                Console.WriteLine("Found it, it's {0}", word);
-                return true;
-            }
-            else
-            {
-                return false;
-                //Console.WriteLine("Couldn't find it");
+                throw new ArgumentNullException(@"pattern");
             }
 
-            throw new NotImplementedException();
+            if (String.IsNullOrWhiteSpace(pattern))
+            {
+                throw new ArgumentException("Pattern can't be empty", @"pattern");
+            }
+
+            if (!pattern.EndsWith("*"))
+            {
+                throw new NotSupportedException("There is no asterik at the end.");
+            }
+
+            if (nameCaseValue == null)
+            {
+                throw new ArgumentNullException(@"nameCaseValue");
+            }
+
+            var word = pattern.Substring(0, pattern.Length - 1);
+            return nameCaseValue.StartsWith(word);
         }
     }
 }

@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Linguistics.Core.Test
@@ -93,14 +98,6 @@ namespace Linguistics.Core.Test
                     Console.WriteLine("-----");
                 }
             }
-        }
-
-        [TestMethod]
-        public void CheckPatternName1_Ivan()
-        {
-            INamePatternService pattern = new NamePatternService();
-
-            Assert.AreEqual(pattern.GetPattern("иван"), "иван*");
         }
 
         [TestMethod]
@@ -249,21 +246,86 @@ namespace Linguistics.Core.Test
         public void MakeDictionary()
         {
             // Arrange
-            const string resourceName = "Resources.NameValue.dic";
-            var names = TestUtils.GetResourceLines(resourceName);
+            string filePath = @"C:\kir\dictionary\NameValue.dic";
+
+            if (!File.Exists(filePath))
+            {
+                throw new Exception("Can't open file");
+            }
+
             var namePatternService = new NamePatternService();
             var count = 0;
+            var errException = 0;
 
-            // Act, Assert
+            // Act
+
+            var names = File.ReadAllLines(filePath)
+                .Select(p => p.ToLowerInvariant())
+                .Where(p => p.Length > 3)
+                .Distinct()
+                .OrderBy(x => x);
+
             foreach (var name in names)
             {
                 if (!name.StartsWith("#"))
                 {
-                    count++;
-                    Console.WriteLine(namePatternService.GetPattern(name));
+                    try
+                    {
+                        count++;
+                        Console.WriteLine(namePatternService.GetPattern(name));
+                    }
+                    catch (Exception)
+                    {
+                        errException++;
+                    }
                 }
             }
-            Assert.AreEqual(0, count);
+
+            // Assert
+            Assert.AreEqual(errException, count);
+        }
+
+        [TestMethod]
+        public void CountRepeatNames()
+        {
+            // Arrange
+            var namePatternService = new NamePatternService();
+            const string filePath = @"C:\kir\dictionary\Patterns.txt";
+            var patterns = File.ReadAllLines(filePath).Distinct().ToArray();
+
+            var fileLength = patterns.Length;
+            var totalAbsorptionPatternsCount = 0;
+
+            // Act
+            var uniquePatterns = new Collection<string>();
+
+            for (var i = 0; i < fileLength; i++)
+            {
+                var absorbedPatterns = new Collection<string>();
+
+                for (var k = 0; k < fileLength; k++)
+                {
+                    if (i == k) continue;
+
+                    if (namePatternService.IsNameMatched(patterns[k], patterns[i]))
+                    {
+                        absorbedPatterns.Add(patterns[k]);
+                        totalAbsorptionPatternsCount++;
+                    }
+                }
+                Console.WriteLine("{0} - {1} {2}", patterns[i], absorbedPatterns.Count,
+                    String.Join(", ", absorbedPatterns));
+
+                if (absorbedPatterns.Count == 0)
+                {
+                    uniquePatterns.Add(patterns[i]);
+                }
+            }
+
+            File.WriteAllLines(@"C:\kir\dictionary\UniquePatterns.txt", uniquePatterns);
+
+            // Assert
+            Assert.AreEqual(fileLength, totalAbsorptionPatternsCount);
         }
 
         [TestMethod]
@@ -296,6 +358,12 @@ namespace Linguistics.Core.Test
             string subname = ")(";
             var changeName = 0;
 
+
+            var loweCaseStrings = (new string[] {"sfvgxcv"})
+                .Select(p => p.ToLowerInvariant())
+                .Where(p => p.Length > 3)
+                .Distinct();
+
             // Act
             foreach (var name in names)
             {
@@ -320,6 +388,199 @@ namespace Linguistics.Core.Test
 
             // Assert
             Assert.AreEqual(0, changeName);
+        }
+
+        [TestMethod]
+        public void SearchDictionary()
+        {
+            // Assign
+            string namesPath = @"C:\kir\dictionary\ru.txt";
+            var names = File.ReadAllLines(namesPath).Select(p => p.Substring(0, p.Length - 3).Trim()).ToArray();
+            string patternsPath = @"C:\kir\dictionary\uniquepatterns.txt";
+            var patterns = File.ReadAllLines(patternsPath).Select(p => p.Substring(0, p.Length - 1)).ToArray();
+            var namePatternService = new NamePatternService();
+
+            var good = 0;
+            var bad = 0;
+
+
+            // Act
+            //Console.WriteLine("{0}", names[1]);
+            var namesLen = names.Length;
+            var patternsLen = patterns.Length;
+
+            for (int i = 0; i < namesLen; i++)
+            {
+                for (int j = 0; j < patternsLen; j++)
+                {
+                    if (names[i].StartsWith(patterns[j]))
+                    {
+                        good++;
+                        Console.WriteLine("found  {0}  in  {1}", patterns[j], names[i]);
+                    }
+                    else
+                    {
+                        bad++;
+                    }
+                }
+            }
+
+            // Assert
+            Assert.AreEqual(good, bad);
+        }
+
+        public void DoubleChecking(string name, StreamWriter fileWords)
+        {
+            // Arrange
+            var namePatternService = new NamePatternService();
+            var declensionService = new DeclensionService();
+            string dictionaryPath = @"C:\kir\dictionary\here\dictionary.txt";
+            var matches = 0;
+            var words = File.ReadAllLines(dictionaryPath);
+
+            var nameCases = declensionService.DeclineFirstName(name);
+
+            /*
+            Console.WriteLine("    Cases:");
+            foreach (var nameCase in nameCases)
+            {
+                Console.WriteLine(nameCase.Value);
+            }
+            */
+            try
+            {
+                var pattern = namePatternService.GetPattern(name);
+
+                // Act
+                foreach (var word in words)
+                {
+                    if (namePatternService.IsNameMatched(pattern, word) && (word.Length - pattern.Length < 4))
+                    {
+                        matches = 0;
+                        //Console.WriteLine("Got a first match: {0} and {1}", pattern, word);
+                        foreach (var nameCase in nameCases)
+                        {
+                            if (word == nameCase.Value)
+                            {
+                                matches++;
+                            }
+                        }
+                        if (matches == 0)
+                        {
+                            fileWords.WriteLine("Catch word ({0}) with pattern ({1})", word, pattern);
+
+                            Console.WriteLine("Catch word ({0}) with pattern ({1})", word, pattern);
+                        }
+                    }
+                }
+            }
+            catch (TooShortPatternException)
+            {
+            }
+        }
+
+        [TestMethod]
+        public void DoubleCheckingDictionary()
+        {
+            string dictionaryPath = @"C:\kir\dictionary\here\names.txt";
+            var names = File.ReadAllLines(dictionaryPath);
+            string filePath = @"C:\kir\dictionary\here\result3char.txt";
+
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            using (StreamWriter fileWords = new StreamWriter(filePath))
+            {
+                foreach (var name in names)
+                {
+                    DoubleChecking(name, fileWords);
+                }
+            }
+        }
+
+
+        [TestMethod]
+        public void ClearDictionary()
+        {
+            string dictionaryPath = @"C:\kir\dictionary\ru.txt";
+            var words =
+                File.ReadAllLines(dictionaryPath)
+                    .Select(p => p.Substring(0, p.Length - 4).Trim())
+                    .Where(p => p.Length > 3)
+                    .ToArray();
+            string filePath = @"C:\kir\dictionary\here\dictionary.txt";
+
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            using (StreamWriter fileWords = new StreamWriter(filePath))
+            {
+                foreach (var word in words)
+                {
+                    fileWords.WriteLine(word);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ClearNames()
+        {
+            string namesPath = @"C:\kir\dictionary\NameValue.dic";
+            var names = File.ReadAllLines(namesPath)
+                .Where(p => !p.StartsWith("#"))
+                .Select(p => p.ToLower())
+                .ToArray();
+            string filePath = @"C:\kir\dictionary\names.txt";
+
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            using (StreamWriter fileWords = new StreamWriter(filePath))
+            {
+                foreach (var name in names)
+                {
+                    fileWords.WriteLine(name);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void StickDictionaries()
+        {
+            /*
+            string filesPath = @"C:\Share\Fiction";
+            var files = Directory.GetFiles(filesPath, "*.txt");
+
+
+            string dictionaryPath = @"C:\kir\dictionary\here\fiction.txt";
+
+            if (File.Exists(dictionaryPath))
+            {
+                File.Delete(dictionaryPath);
+            }
+
+
+            using (StreamWriter writer = new StreamWriter(dictionaryPath))
+            {
+                foreach (var file in files.Take(1))
+                {
+                    var dictionary = File.ReadAllText(file).Split(' ').ToArray();
+
+                    foreach (var line in dictionary)
+                    {
+                        writer.WriteLine(line);
+                    }
+                }
+            }
+            */
         }
     }
 }
